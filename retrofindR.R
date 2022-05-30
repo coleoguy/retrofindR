@@ -1,11 +1,12 @@
+# This is a script to work on the initial steps of the retrofindR package.
+
 gff <- read.delim("Drosophila_melanogaster.BDGP6.32.106.gff3", header = F,
                   comment.char = "#")
 colnames(gff) <- c("seq","source","feature","start","stop","score","strand","phase","info")
 
 
 # we need an exon exon junction file
-# here lets create an empty vector that we will
-# fill with the data we need
+# here lets create an empty vector that we will fill with the data we need
 eejct <- vector()
 
 # this loop works its way through the gff file
