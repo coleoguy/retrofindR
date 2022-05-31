@@ -31,21 +31,22 @@ exons<-exons[!duplicated(exons$start),]
 #if statement printing junctions:
 if(nrow("exons")>1){
   
-  for(i in 1:dim(exons)[1]){
+  for(i in 2:nrow(exons)){
     #Perform initial operations
-    #TODO:if [i]=1 do not run
-    start <- exons$stop[i]-30
-    stop<- exons$stop[i]
-    #TODO:if [i]=dim(exons) do not run
+    if(i!=1){
+    start <- exons$stop[i-1]-30
+    stop<- exons$stop[i-1]
+    
     start2<- exons$start[i]
     stop2 <- exons$start[i] + 30
-    
+    }
     #bind to output dataframe
     eejct <- rbind(eejct,
                    cbind(start,
                          start2,
                          stop,
-                         stop2))
+                         stop2,curgene.name))
+    
     
   }
 }
