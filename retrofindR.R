@@ -18,16 +18,36 @@ for(i in 1:nrow(gff)){
      cur.start<-gff$start[i]
      cur.end<-gff$stop[i]
      cur.seq<-gff$seq[i]
-  }
-  
+#how to sort by location and sequence
+  exons<-subset(gff,gff$start>=cur.start & gff$stop<=cur.end & gff$feature=="exon"& gff$seq==cur.seq)[,c(1,4,5)]
+}
+exons$gene<-curgene.name
+exons<-exons[!duplicated(exons$start),]
+}
   # add another if statement that is true when you have two exons 
   # that are in the same gene (curgene) when it is true
   # store the start and stop positions for the part 
   # you want to become your exon exon jct sequences
+#if statement printing junctions:
+if(nrow("exons")>1){
+  
+  for(i in 1:dim(exons)[1]){
+    #Perform initial operations
+    #TODO:if [i]=1 do not run
+    start <- exons$stop[i]-30
+    stop<- exons$stop[i]
+    #TODO:if [i]=dim(exons) do not run
+    start2<- exons$start[i]
+    stop2 <- exons$start[i] + 30
+    
+    #bind to output dataframe
+    eejct <- rbind(eejct,
+                   cbind(start,
+                         start2,
+                         stop,
+                         stop2))
+    
+  }
 }
-#sorting by gene name doesnt work
-library(stringr)
-gff[str_detect(gff$info,curgene.name)]
 
-#how to sort by location and sequence
-exons<-subset(gff,gff$start>=cur.start & gff$stop<=cur.end & gff$feature=="exon"& gff$seq==cur.seq)
+
