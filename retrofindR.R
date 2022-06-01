@@ -7,7 +7,7 @@ colnames(gff) <- c("seq","source","feature","start","stop","score","strand","pha
 
 # we need an exon exon junction file
 # here lets create an empty vector that we will fill with the data we need
-eejct <- vector()
+eejct <- data.frame()
 
 # this loop works its way through the gff file
 for(i in 1:nrow(gff)){
@@ -30,25 +30,26 @@ exons<-exons[!duplicated(exons$start),]
   # you want to become your exon exon jct sequences
 #if statement printing junctions:
 if(nrow("exons")>1){
-  
-  for(i in 2:nrow(exons)){
-    #Perform initial operations
-    if(i!=1){
+  i <- 2
+  working <- T
+  while(working){
     start <- exons$stop[i-1]-30
     stop<- exons$stop[i-1]
-    
     start2<- exons$start[i]
     stop2 <- exons$start[i] + 30
+    if(stop2 < stop){
+      working <- F
+    }else{
+      #bind to output dataframe
+      eejct <- rbind(eejct,
+                     cbind(cur.seq,start,stop,start2,
+                           stop2,curgene.name))
     }
-    #bind to output dataframe
-    eejct <- rbind(eejct,
-                   cbind(start,
-                         start2,
-                         stop,
-                         stop2,curgene.name))
-    
-    
+    if(i == nrow(exons)){
+      working <- F
+    }
+    i <- i + 1
   }
 }
 
-
+#TODO: run code thrugh gff file and save each eejct data set as one component of a list
