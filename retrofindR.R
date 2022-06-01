@@ -52,4 +52,5 @@ if(nrow("exons")>1){
   }
 }
 
-#TODO: run code thrugh gff file and save each eejct data set as one component of a list
+#TODO: run code through gff file and save each eejct data set 
+#as one component of a list
