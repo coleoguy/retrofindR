@@ -1,8 +1,10 @@
+setwd("~/R stuff/retrofindR")
 # This is a script to work on the initial steps of the retrofindR package.
 
 gff <- read.delim("Drosophila_melanogaster.BDGP6.32.106.gff3", header = F,
                   comment.char = "#")
 colnames(gff) <- c("seq","source","feature","start","stop","score","strand","phase","info")
+
 
 
 # we need an exon exon junction file
@@ -51,12 +53,17 @@ for(i in 1:nrow(gff)){
       j <- j + 1
     }
     
+    if(length(eejct!=0)){
     
     eejct_unique <- paste0("eejct_",eejct$curgene.name[1])
     
     eejct_list[[length(eejct_list) + 1]] <- assign(eejct_unique,eejct)
+    
+    }
   }
-}
+  
+  }
+  length(eejct_list[[5]])
 # exons$gene<-curgene.name
 # exons<-exons[!duplicated(exons$start),]
 # 
@@ -121,4 +128,5 @@ gff$info[9]
 #TODO: run code through gff file and save each eejct data set 
 #as one component of a list
 
+save(eejct_list, file="drosjctlist")
 length(eejct_list)
