@@ -40,20 +40,3 @@ write.fasta(eejct_code_list,names(eejct_code_list), open="w",as.string = FALSE,
 
 
 
-q_unique <- paste0("seq_",cur.table$cur.seq[1])
-
-seq_code_list[[length(seq_code_list) + 1]] <- assign(seq_unique,eejct_code)
-
-
-
-
-if(eejct_list[[i]]$cur.seq[j] == names(genome)[j]){
-  curr_seq <- genome[[j]]
-}
-
-
-
-
-
-
-eejct_seqs_list[[length(master_eejct_code_list) + 1]] <- eejct_code_list
