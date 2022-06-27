@@ -1,4 +1,4 @@
-setwd("~/R stuff")
+setwd("~/R stuff/retrofindR")
 library(seqinr)
 genome<-read.fasta("Drosophila_melanogaster.BDGP6.32.dna.toplevel.fa")
 load("drosjctlist")
