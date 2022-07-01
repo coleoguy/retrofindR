@@ -30,7 +30,7 @@ for(i in 1:nrow(gff)){
   #Remove dulications and add gene_id
   exons$gene<-curgene.name
   exons<-exons[!duplicated(exons$start),]
-  
+  #loop through "exons" and create start, stop, start2, stop2 of jcts
   if(nrow(exons) > 1){
     j <- 2
     working <- T
@@ -52,6 +52,8 @@ for(i in 1:nrow(gff)){
       }
       j <- j + 1
     }
+  #create unique names for each possible eejct with 
+    #the same gene name (ex: FB0002_1, FB0002_2, etc)  
     
     if(length(eejct!=0)){
     
