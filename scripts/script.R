@@ -27,18 +27,18 @@ query.seq <- paste(unlist(cds.seq), collapse = "")
 sink("data/test.fasta")
 cat(">test\n")
 cat(test.seq)
-file.show("data/test.fasta")
+#file.show("data/test.fasta")
 sink()
 
 sink("data/query.fasta")
 cat(">query\n")
 cat(query.seq)
-file.show("data/query.fasta")
+#file.show("data/query.fasta")
 sink()
 #####
 
 
-#### Test Analysis ####
+#### Test Toy Analysis ####
 # create blast local database
 subject.fasta <- "data/test.fasta"
 database.name <- "data/test"
@@ -61,4 +61,30 @@ writeLines(output.content, output.file)
 
 #read in results
 blast <- read.csv(output.file, sep = "\t")
+#####
 
+
+#### Test D. melanogaster Analysis ####
+# create blast local database
+subject.fasta <- "/Users/andresbarboza/Downloads/Drosophila_melanogaster.BDGP6.32.dna.toplevel.fa"
+database.name <- "data/d_melanogaster"
+database.command <- paste("makeblastdb -in", subject.fasta, "-out",
+                          database.name, "-dbtype 'nucl' -hash_index")
+system(command = database.command)
+
+# do blastn
+query.file <- "data/roc1a.fasta"
+output.file <- "data/roc1a_blast.csv"
+blastn.command <- paste("blastn -query", query.file, "-db", database.name,
+                        "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore'")
+system(blastn.command)
+header <- "qseqid\tsseqid\tpident\tlength\tmismatch\tgapopen\tqstart\tqend\tsstart\tsend\tevalue\tbitscore"
+header.file <- tempfile(fileext = ".txt")
+writeLines(header, header.file)
+blastn.content <- readLines("data/test_blast_no_header.csv")
+output.content <- c(header, blastn.content)
+writeLines(output.content, output.file)
+
+#read in results
+blast <- read.csv(output.file, sep = "\t")
+#####

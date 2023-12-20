@@ -1,0 +1,3 @@
+qseqid	sseqid	pident	length	mismatch	gapopen	qstart	qend	sstart	send	evalue	bitscore
+FBtr0081301	2L	99.760	416	0	1	1	416	19959280	19959694	0.0	761
+FBtr0081301	2L	99.296	142	0	1	409	549	19959746	19959887	6.68e-67	255

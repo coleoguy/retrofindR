@@ -6,7 +6,7 @@
   "description": "data/test.fasta",
   "number-of-letters": 2000,
   "number-of-sequences": 1,
-  "last-updated": "2023-12-20T10:24:00",
+  "last-updated": "2023-12-20T11:55:00",
   "number-of-volumes": 1,
   "bytes-total": 37687,
   "bytes-to-cache": 614,
