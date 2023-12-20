@@ -28,11 +28,13 @@ sink("data/test.fasta")
 cat(">test\n")
 cat(test.seq)
 file.show("data/test.fasta")
+sink()
 
 sink("data/query.fasta")
 cat(">query\n")
 cat(query.seq)
 file.show("data/query.fasta")
+sink()
 #####
 
 
