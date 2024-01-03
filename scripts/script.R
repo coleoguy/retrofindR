@@ -105,6 +105,16 @@ for (i in 1:nrow(blast)) {
 }
 print(pairs_within_40)
 
+filtered.blast <- data.frame()
+filtered.blast <- blast[(blast$length >= 50),]
+for (i in 1:length(pairs_within_40)) {
+  if ((blast$length[as.numeric(substr(pairs_within_40[i],1,2))] + blast$length[as.numeric(substr(pairs_within_40[i],4,5))]) >= 50){
+    filtered.blast <- rbind(filtered.blast, blast[as.numeric(substr(pairs_within_40[i],1,2)),])
+    filtered.blast <- rbind(filtered.blast, blast[as.numeric(substr(pairs_within_40[i],4,5)),])
+  }
+}
+filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
+
 
 
 ##retrocopy screen best practice (from Marques et al.)
