@@ -74,9 +74,9 @@ system(command = database.command)
 
 # do blastn
 query.file <- "data/roc1a.fasta"
-output.file <- "data/roc1a_blast.csv"
-blastn.command <- paste("blastn -query", query.file, "-db", database.name,
-                        "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore'")
+output.file <- "data/roc1a_blast.csv.csv"
+blastn.command <- paste("blastn -task blastn-short -query", query.file, "-db", database.name,
+                        "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore' -evalue 50")
 system(blastn.command)
 header <- "qseqid\tsseqid\tpident\tlength\tmismatch\tgapopen\tqstart\tqend\tsstart\tsend\tevalue\tbitscore"
 header.file <- tempfile(fileext = ".txt")
@@ -88,3 +88,27 @@ writeLines(output.content, output.file)
 #read in results
 blast <- read.csv(output.file, sep = "\t")
 #####
+
+
+
+#adjacent homology
+pairs_within_40 <- c()
+for (i in 1:nrow(blast)) {
+  for (j in 1:nrow(blast)) {
+    if (i != j) {  # Avoid comparing the same row
+      diff_value = abs(blast$sstart[i] - blast$send[j])
+      if (diff_value <= 40) {
+        pairs_within_40 <- c(pairs_within_40, paste(i, j, sep = "-"))
+      }
+    }
+  }
+}
+print(pairs_within_40)
+
+
+
+##retrocopy screen best practice (from Marques et al.)
+#merged adjacent homology matches (distance < 40bp)
+#amino acid identity < 50%
+#aligned over 70% of their length
+#merged sequence 
