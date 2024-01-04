@@ -119,6 +119,8 @@ filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
 
 ##retrocopy screen best practice (from Marques et al.)
 #merged adjacent homology matches (distance < 40bp)
+#minimum length 50 aminoacids
 #amino acid identity < 50%
 #aligned over 70% of their length
-#merged sequence 
+#merged sequence
+
