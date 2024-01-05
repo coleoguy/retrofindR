@@ -74,9 +74,9 @@ system(command = database.command)
 
 # do blastn
 query.file <- "data/roc1a.fasta"
-output.file <- "data/roc1a_blast.csv.csv"
+output.file <- "data/roc1a_blast.csv"
 blastn.command <- paste("blastn -task blastn-short -query", query.file, "-db", database.name,
-                        "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore' -evalue 50")
+                        "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore' -evalue 1000")
 system(blastn.command)
 header <- "qseqid\tsseqid\tpident\tlength\tmismatch\tgapopen\tqstart\tqend\tsstart\tsend\tevalue\tbitscore"
 header.file <- tempfile(fileext = ".txt")
@@ -116,8 +116,10 @@ for (i in 1:length(pairs_within_40)) {
 filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
 
 
+#Only alignment to COX4L
+blast[(blast$sseqid == "2R" &  5353994<blast$sstart & blast$sstart<5354723),]
 
-##retrocopy screen best practice (from Marques et al.)
+##retrocopy screen best practice (from Marques et al.) [https://doi.org/10.1371/journal.pbio.0030357]
 #merged adjacent homology matches (distance < 40bp)
 #minimum length 50 aminoacids
 #amino acid identity < 50%
