@@ -92,25 +92,30 @@ blast <- read.csv(output.file, sep = "\t")
 
 
 #adjacent homology
-pairs_within_40 <- c()
+pairs_within_40 <- data.frame(
+  Value=c(0,0)
+)
+counter <- 0
 for (i in 1:nrow(blast)) {
   for (j in 1:nrow(blast)) {
     if (i != j) {  # Avoid comparing the same row
       diff_value = abs(blast$sstart[i] - blast$send[j])
       if (diff_value <= 40) {
-        pairs_within_40 <- c(pairs_within_40, paste(i, j, sep = "-"))
+        counter <- counter + 1
+        pairs_within_40[[paste("value", counter)]] <- c(i, j)
       }
     }
   }
 }
+pairs_within_40 <- pairs_within_40[,2:length(pairs_within_40)]
 print(pairs_within_40)
 
 filtered.blast <- data.frame()
 filtered.blast <- blast[(blast$length >= 50),]
 for (i in 1:length(pairs_within_40)) {
-  if ((blast$length[as.numeric(substr(pairs_within_40[i],1,2))] + blast$length[as.numeric(substr(pairs_within_40[i],4,5))]) >= 50){
-    filtered.blast <- rbind(filtered.blast, blast[as.numeric(substr(pairs_within_40[i],1,2)),])
-    filtered.blast <- rbind(filtered.blast, blast[as.numeric(substr(pairs_within_40[i],4,5)),])
+  if ((blast$length[as.numeric(pairs_within_40[[i]][[1]])] + blast$length[as.numeric(pairs_within_40[[i]][[2]])]) >= 50){
+    filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_within_40[[i]][[1]]),])
+    filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_within_40[[i]][[2]]),])
   }
 }
 filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
