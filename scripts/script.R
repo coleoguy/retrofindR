@@ -66,15 +66,15 @@ blast <- read.csv(output.file, sep = "\t")
 
 #### Test D. melanogaster Analysis ####
 # create blast local database
-subject.fasta <- "/Users/andresbarboza/Downloads/Drosophila_melanogaster.BDGP6.32.dna.toplevel.fa"
-database.name <- "data/d_melanogaster"
+subject.fasta <- "data/Drosophila_melanogaster.BDGP6.32.dna.toplevel.fa"
+database.name <- "data/databases/d_melanogaster"
 database.command <- paste("makeblastdb -in", subject.fasta, "-out",
                           database.name, "-dbtype 'nucl' -hash_index")
 system(command = database.command)
 
 # do blastn
-query.file <- "data/roc1a.fasta"
-output.file <- "data/roc1a_blast.csv"
+query.file <- "data/fasta/"
+output.file <- "data/CSVs/"
 blastn.command <- paste("blastn -task blastn-short -query", query.file, "-db", database.name,
                         "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore' -evalue 1000")
 system(blastn.command)
@@ -108,7 +108,7 @@ for (i in 1:nrow(blast)) {
   }
 }
 pairs_within_40 <- pairs_within_40[,2:length(pairs_within_40)]
-print(pairs_within_40)
+#print(pairs_within_40)
 
 filtered.blast <- data.frame()
 filtered.blast <- blast[(blast$length >= 50),]
@@ -121,8 +121,6 @@ for (i in 1:length(pairs_within_40)) {
 filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
 
 
-#Only alignment to COX4L
-blast[(blast$sseqid == "2R" &  5353994<blast$sstart & blast$sstart<5354723),]
 
 ##retrocopy screen best practice (from Marques et al.) [https://doi.org/10.1371/journal.pbio.0030357]
 #merged adjacent homology matches (distance < 40bp)
