@@ -73,10 +73,10 @@ database.command <- paste("makeblastdb -in", subject.fasta, "-out",
 system(command = database.command)
 
 # do blastn
-query.file <- "data/fasta/"
-output.file <- "data/CSVs/"
-blastn.command <- paste("blastn -task blastn-short -query", query.file, "-db", database.name,
-                        "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore' -evalue 1000")
+query.file <- "data/fasta/ttm50.fasta"
+output.file <- "data/CSVs/ttm50_blast.csv"
+blastn.command <- paste("blastn -task blastn -query", query.file, "-db", database.name,
+                        "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore' -evalue 10")
 system(blastn.command)
 header <- "qseqid\tsseqid\tpident\tlength\tmismatch\tgapopen\tqstart\tqend\tsstart\tsend\tevalue\tbitscore"
 header.file <- tempfile(fileext = ".txt")
@@ -107,20 +107,36 @@ for (i in 1:nrow(blast)) {
     }
   }
 }
-pairs_within_40 <- pairs_within_40[,2:length(pairs_within_40)]
-#print(pairs_within_40)
+
 
 filtered.blast <- data.frame()
 filtered.blast <- blast[(blast$length >= 50),]
-for (i in 1:length(pairs_within_40)) {
-  if ((blast$length[as.numeric(pairs_within_40[[i]][[1]])] + blast$length[as.numeric(pairs_within_40[[i]][[2]])]) >= 50){
-    filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_within_40[[i]][[1]]),])
-    filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_within_40[[i]][[2]]),])
+if(length(pairs_within_40)>1) {
+  pairs_within_40 <- pairs_within_40[,2:length(pairs_within_40)]
+  for (i in 1:length(pairs_within_40)) {
+    if ((blast$pident[as.numeric(pairs_within_40[[i]][[1]])] + blast$pident[as.numeric(pairs_within_40[[i]][[2]])])/2 > 50){
+      filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_within_40[[i]][[1]]),])
+      filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_within_40[[i]][[2]]),])
+    }
   }
 }
+
 filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
 
+filtered.blast <- filtered.blast[(filtered.blast$length - filtered.blast$mismatch - filtered.blast$gapopen) >= 50,]
 
+
+
+
+
+
+
+
+
+
+blast[(blast$sseqid == "2L" &  22079687<blast$sstart & blast$send<22080719),]
+
+foo <- filtered.blast[filtered.blast$length]
 
 ##retrocopy screen best practice (from Marques et al.) [https://doi.org/10.1371/journal.pbio.0030357]
 #merged adjacent homology matches (distance < 40bp)
