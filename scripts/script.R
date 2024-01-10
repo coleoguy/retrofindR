@@ -75,8 +75,8 @@ system(command = database.command)
 # do blastn
 subject.fasta <- "data/Drosophila_melanogaster.BDGP6.32.dna.toplevel.fa"
 database.name <- "data/databases/d_melanogaster"
-query.file <- "data/fasta/nmda1.fasta"
-output.file <- "data/CSVs/nmda1_blast.csv"
+query.file <- "data/fasta/Klp10A.fasta"
+output.file <- "data/CSVs/Klp10A_blast.csv"
 blastn.command <- paste("blastn -task blastn -query", query.file, "-db", database.name,
                         "-out data/test_blast_no_header.csv -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore' -evalue 10")
 system(blastn.command)
@@ -90,7 +90,6 @@ writeLines(output.content, output.file)
 #read in results
 blast <- read.csv(output.file, sep = "\t")
 #####
-
 
 
 #adjacent homology
@@ -126,8 +125,6 @@ if(length(pairs_within_40)>1) {
 filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
 
 filtered.blast <- filtered.blast[(filtered.blast$length - filtered.blast$mismatch - filtered.blast$gapopen) >= 50,]
-
-
 
 
 ##retrocopy screen best practice (from Marques et al.) [https://doi.org/10.1371/journal.pbio.0030357]
