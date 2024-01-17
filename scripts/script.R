@@ -63,12 +63,12 @@ filtering <- function(blast, adjacent_homology_cutoff = 40,
 
 ## ANALYSIS
 createDB(database.name = "data/databases/d_melanogaster",
-         subject.fasta = "data/Drosophila_melanogaster.BDGP6.32.dna.toplevel.fa")
+         subject.fasta = "data/Drosophila_melanogaster.BDGP5.dna.toplevel.fa")
 
 
 blast <- blastn(database.name = "data/databases/d_melanogaster",
-                query.file = "data/fasta/Klp10A.fasta",
-                output.file = "data/CSVs/Klp10A_blast.csv")
+                query.file = "data/fasta/CkIalpha.fasta",
+                output.file = "data/CSVs/CkIalpha_blast.csv")
 
 filtered.blast <- filtering(blast = blast)
 
