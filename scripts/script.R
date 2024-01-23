@@ -36,8 +36,7 @@ filtering <- function(blast, adjacent_homology_cutoff = 40,
   for (i in 1:nrow(blast)) {
     for (j in 1:nrow(blast)) {
       if (i != j) {  # Avoid comparing the same row
-        diff_value = abs(blast$sstart[i] - blast$send[j])
-        if (diff_value <= adjacent_homology_cutoff) {
+        if (((abs(blast$sstart[i] - blast$send[j]) <= adjacent_homology_cutoff) | (abs(blast$send[i] - blast$sstart[j]) <= adjacent_homology_cutoff)) & (blast$sseqid[i] == blast$sseqid[j])) {
           counter <- counter + 1
           pairs_found[[paste("value", counter)]] <- c(i, j)
         }
@@ -45,10 +44,10 @@ filtering <- function(blast, adjacent_homology_cutoff = 40,
     }
   }
   filtered.blast <- data.frame()
-  filtered.blast <- blast[(blast$length >= alignment_length_cutoff),]
+  filtered.blast <- blast[((blast$length - blast$mismatch -blast$gapopen) >= alignment_length_cutoff),]
   if(length(pairs_found)>1) {
     for (i in 2:length(pairs_found)) {
-      if ((blast$pident[as.numeric(pairs_found[[i]][[1]])] + blast$pident[as.numeric(pairs_found[[i]][[2]])])/2 > percent_ident_cutoff){
+      if (((blast$pident[as.numeric(pairs_found[[i]][[1]])] + blast$pident[as.numeric(pairs_found[[i]][[2]])])/2 > percent_ident_cutoff) & (blast$length[as.numeric(pairs_found[[i]][[1]])] + blast$length[as.numeric(pairs_found[[i]][[2]])] >= alignment_length_cutoff)){
         filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_found[[i]][[1]]),])
         filtered.blast <- rbind(filtered.blast, blast[as.numeric(pairs_found[[i]][[2]]),])
       }
@@ -56,7 +55,7 @@ filtering <- function(blast, adjacent_homology_cutoff = 40,
     pairs_found <- pairs_found[,2:length(pairs_found)]
   }
   filtered.blast <- filtered.blast[!duplicated(filtered.blast),]
-  filtered.blast <- filtered.blast[(filtered.blast$length - filtered.blast$mismatch - filtered.blast$gapopen) >= alignment_length_cutoff,]
+  filtered.blast <- filtered.blast[(filtered.blast$sseqid == "X" | filtered.blast$sseqid == "Y" | filtered.blast$sseqid == "2L" | filtered.blast$sseqid == "2R" | filtered.blast$sseqid == "3L" | filtered.blast$sseqid == "3R" | filtered.blast$sseqid == "4"),]
   return(filtered.blast)
 }
 
@@ -67,10 +66,13 @@ createDB(database.name = "data/databases/d_melanogaster",
 
 
 blast <- blastn(database.name = "data/databases/d_melanogaster",
-                query.file = "data/fasta/CkIalpha.fasta",
-                output.file = "data/CSVs/CkIalpha_blast.csv")
+                query.file = "data/fasta/CRAT.fasta",
+                output.file = "data/CSVs/CRAT_blast.csv")
 
-filtered.blast <- filtering(blast = blast)
+filtered.blast <- filtering(blast = blast,
+                            adjacent_homology_cutoff = 1500,
+                            percent_ident_cutoff = 50,
+                            alignment_length_cutoff = 320)
 
 
 
